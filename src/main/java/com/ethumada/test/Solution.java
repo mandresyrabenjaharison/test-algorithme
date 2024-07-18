@@ -7,33 +7,23 @@ import java.util.Set;
 
 class Solution {
 
-    public static List<String> generatePalindromes(String s) {
-        List<String> arrayListOfPalindromes = new ArrayList<>();
+    public static List<String> generatePalindromes(String word) {
+        Set<String> palindromeSet = new HashSet<>();
 
-        Set<String> paliSet = new HashSet<>();
-        generatePermutations("", s, paliSet);
-
-        boolean isPali = isPalindrome(s);
-        if(isPali){
-
-            //
-            generatePermutations("", s, paliSet);
-            //
-
-            return arrayListOfPalindromes;
-        }else{
-            return arrayListOfPalindromes;
-        }
-
+        generatePalindrome("", word.toLowerCase(), palindromeSet);
+        return new ArrayList<>(palindromeSet);
     }
 
-    public static void generatePermutations(String prefix, String stringRestant, Set<String> res) {
-        int nbRestant = stringRestant.length();
-        if(nbRestant == 0){
-            String reversedOf = new StringBuilder(prefix).reverse().toString();
-        }else{
-            for(int i = 0; i < nbRestant; i++){
-                generatePermutations(prefix + stringRestant.charAt(i), stringRestant.substring(0, i), res);
+    private static void generatePalindrome(String leftPos, String rightPos, Set<String> result) {
+        if (rightPos.isEmpty()) {
+            if (isPalindrome(leftPos)) {
+                result.add(leftPos);
+            }
+        } else {
+            for (int i = 0; i < rightPos.length(); i++) {
+                String nextLeftPos = leftPos + rightPos.charAt(i);
+                String nextRightPos = rightPos.substring(0, i) + rightPos.substring(i + 1);
+                generatePalindrome(nextLeftPos, nextRightPos, result);
             }
         }
     }
@@ -46,26 +36,28 @@ class Solution {
         int rightPosition = len - 1;
 
         while(leftPosition < rightPosition){
-            System.out.println("leftPosition = "+leftPosition+ "; rightPosition = "+rightPosition);
             if(strTransform.charAt(leftPosition) != strTransform.charAt(rightPosition)){
                 return false;
             }
-
             leftPosition++;
             rightPosition--;
         }
         return true;
     }
+    public static void main(String[] args) {
+        String stringForExample = "Acca";
+        List<String> listOfPalindromes = new ArrayList<>();
 
-    public static void main(String[] args){
-        String stringForExample = "Arra";
         boolean isPalindrome = false;
         isPalindrome =  isPalindrome(stringForExample);
+
         System.out.println("Entrée = "+stringForExample+ "; isPalindrome = "+isPalindrome);
+
         if(isPalindrome){
-            List<String> list = new ArrayList<>();
-            list = generatePalindromes(stringForExample);
-            System.out.println("List of palindromes from "+stringForExample+ " : "+list);
+            listOfPalindromes = generatePalindromes(stringForExample);
+            System.out.println("List of palindromes from "+stringForExample+ " : "+listOfPalindromes);
+        }else{
+            System.out.println("List of palindromes from "+stringForExample+ " : "+listOfPalindromes);
         }
     }
 
